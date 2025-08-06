@@ -1,5 +1,5 @@
 import torch
-
+import torch.fx
 
 class NoiseScheduleVP:
     def __init__(

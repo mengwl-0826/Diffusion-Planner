@@ -1,5 +1,6 @@
 
 import torch
+import torch.fx
 import torch.nn as nn
 
 from diffusion_planner.model.module.encoder import Encoder

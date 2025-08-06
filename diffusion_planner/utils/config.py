@@ -1,6 +1,6 @@
 import json
 import torch
-
+import torch.fx
 from diffusion_planner.utils.normalizer import StateNormalizer, ObservationNormalizer
 
 

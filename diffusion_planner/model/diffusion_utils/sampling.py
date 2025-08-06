@@ -1,5 +1,6 @@
 from typing import Dict
 import torch
+import torch.fx
 import diffusion_planner.model.diffusion_utils.dpm_solver_pytorch as dpm
 
 

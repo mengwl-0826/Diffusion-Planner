@@ -1,5 +1,6 @@
 import os
 import torch
+import torch.fx
 import argparse
 from torch import optim
 from timm.utils import ModelEma

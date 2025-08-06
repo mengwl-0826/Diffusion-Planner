@@ -1,5 +1,6 @@
 from tqdm import tqdm
 import torch
+import torch.fx
 from torch import nn
 
 from diffusion_planner.utils.data_augmentation import StatePerturbation   

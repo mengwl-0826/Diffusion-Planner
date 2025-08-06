@@ -1,5 +1,6 @@
 import os
 import torch
+import torch.fx
 import torch.nn as nn
 import torch.nn.functional as F
 from nuplan.common.actor_state.vehicle_parameters import VehicleParameters, get_pacifica_parameters
@@ -32,7 +33,8 @@ def batch_signed_distance_rect(rect1, rect2):
     
     overlap = torch.cat([proj1_min - proj2_max, proj2_min - proj1_max], dim=1) # [B, 8]
     
-    positive_distance = torch.where(overlap < 0, 1e5, overlap)
+    # positive_distance = torch.where(overlap < 0, 1e5, overlap)
+    positive_distance = torch.where(overlap < 0, torch.tensor(1e5, dtype=overlap.dtype, device=overlap.device), overlap)
     
     is_overlap = (overlap < 0).all(dim=1)
     distance = torch.where(is_overlap, overlap.max(dim=1).values, positive_distance.min(dim=1).values)   
