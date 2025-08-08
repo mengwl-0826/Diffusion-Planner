@@ -23,6 +23,7 @@ $RUN_PYTHON_PATH train_predictor.py \
 --freeze_base_model True \
 --lora_lr 3e-4 \
 --learning_rate 5e-4 \
---save_dir ./lora_finetuning_results
+--save_dir ./lora_finetuning_results \
+--train_epochs 2 \
 
 # --use_data_augment 数据增强方式（如旋转角度、裁剪比例等）

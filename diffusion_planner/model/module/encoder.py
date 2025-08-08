@@ -73,7 +73,8 @@ class SelfAttentionBlock(nn.Module):
         self.norm1 = nn.LayerNorm(dim)
         self.attn = nn.MultiheadAttention(dim, heads, dropout, batch_first=True)
 
-        self.drop_path = DropPath(dropout) if dropout > 0.0 else nn.Identity()
+        self.drop_path = DropPath(dropout) if dropout > 0.0 else nn.Identity() 
+        #drop没有梯度,在训练时通过随机丢弃元素，间接影响流经该层的张量的梯度传播
         self.norm2 = nn.LayerNorm(dim)
         mlp_hidden_dim = int(dim * mlp_ratio)
         self.mlp = Mlp(in_features=dim, hidden_features=mlp_hidden_dim, act_layer=nn.GELU, drop=dropout)
