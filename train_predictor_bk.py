@@ -72,13 +72,10 @@ def get_args():
     parser.add_argument('--batch_size', type=int, help='batch size (default: 2048)', default=2048)
     parser.add_argument('--learning_rate', type=float, help='learning rate (default: 5e-4)', default=5e-4)
     parser.add_argument('--warm_up_epoch', type=int, help='number of warm up', default=5)
-    #学习率预热（Learning Rate Warm-up） 的轮数（Epochs）。它控制模型在训练初期以较低的学习率逐步提升到预设值，避免因初始学习率过高导致模型不稳定或训练效果不佳
     parser.add_argument('--encoder_drop_path_rate', type=float, help='encoder drop out rate', default=0.1)
-    #DropPath 是一种正则化技术，是 Dropout 的变体。它在训练时随机 "丢弃" 整个网络层的路径（即让某些层的输出直接跳过，不参与当前迭代的计算）
     parser.add_argument('--decoder_drop_path_rate', type=float, help='decoder drop out rate', default=0.1)
 
     parser.add_argument('--alpha_planning_loss', type=float, help='coefficient of planning loss (default: 1.0)', default=1.0)
-    #预测损失（预测轨迹与真实轨迹的误差）规划损失（评估规划轨迹的合理性，如安全性、平滑性等系数
 
     parser.add_argument('--device', type=str, help='run on which device (default: cuda)', default='cuda')
 
@@ -102,33 +99,6 @@ def get_args():
     parser.add_argument('--ddp', default=True, type=boolean, help='use ddp or not')
     parser.add_argument('--port', default='22323', type=str, help='port')
 
-    # LoRA parameters
-    parser.add_argument('--use_lora', default=False, type=lambda x: (str(x).lower() in ['true', '1', 'yes']), 
-                        help='whether to use LoRA for parameter-efficient fine-tuning')
-    parser.add_argument('--lora_rank', type=int, default=8, 
-                        help='rank of LoRA matrices')
-    parser.add_argument('--lora_alpha', type=float, default=16.0, 
-                        help='scaling factor for LoRA updates')
-    parser.add_argument('--lora_dropout', type=float, default=0.05, 
-                        help='dropout rate for LoRA layers')
-    # 使用模型中存在的模块名
-    parser.add_argument('--lora_target_modules', type=str, nargs='+', 
-                    default=['out_proj'],
-                    help='Names of modules to apply LoRA')
-    #nargs='+'：表示该参数可以接受一个或多个值（即可以指定多个模块）
-    parser.add_argument('--lora_lr', type=float, default=3e-4, 
-                        help='learning rate for LoRA parameters')
-    parser.add_argument('--freeze_base_model', default=True, type=lambda x: (str(x).lower() in ['true', '1', 'yes']), 
-                        help='whether to freeze the base model weights when using LoRA')
-
-    # Pre-trained model paths
-    parser.add_argument('--pretrained_args_path', type=str, 
-                        default="/media/data/Down/d2d/zichennuplan/Diffusion-Planner/checkpoints/args.json",
-                        help='path to pre-trained model args.json')
-    parser.add_argument('--pretrained_ckpt_path', type=str,
-                        default="/media/data/Down/d2d/zichennuplan/Diffusion-Planner/checkpoints/model.pth",
-                        help='path to pre-trained model checkpoint')
-
     args = parser.parse_args()
 
     args.state_normalizer = StateNormalizer.from_json(args)
@@ -137,51 +107,20 @@ def get_args():
     return args
 
 def model_training(args):
-    """
-    Train a Diffusion Planner model using distributed data parallel (DDP) setup.
-
-    Parameters:
-    args (argparse.Namespace): Contains all training hyperparameters and configurations.
-        Expected attributes include:
-        - name (str): Name of the current experiment
-        - batch_size (int): Batch size for training
-        - learning_rate (float): Learning rate for optimizer
-        - device (str): Device to run the model on ('cuda' or 'cpu')
-        - resume_model_path (str, optional): Path to resume training from
-        - save_dir (str): Directory to save training logs
-        - seed (int): Random seed for reproducibility
-        - train_epochs (int): Total number of training epochs
-        - warm_up_epoch (int): Number of warm-up epochs for scheduler
-        - save_utd (int): Frequency (in epochs) to save model updates
-        - Other parameters related to data loading, augmentation, and model architecture
-
-    Returns:
-    None: The function trains the model and saves checkpoints but does not return any value.
-    """
 
     # init ddp
     global_rank, rank, _ = ddp.ddp_setup_universal(True, args)
-    print(f"global rank: {global_rank}, rank: {rank}")
+
     if global_rank == 0:
-        # Logging experiment configuration and hyperparameters
+        # Logging
         print("------------- {} -------------".format(args.name))
         print("Batch size: {}".format(args.batch_size))
         print("Learning rate: {}".format(args.learning_rate))
         print("Use device: {}".format(args.device))
-        if args.use_lora:
-            print("Using LoRA fine-tuning")
-            print("LoRA rank: {}".format(args.lora_rank))
-            print("LoRA alpha: {}".format(args.lora_alpha))
-            print("LoRA dropout: {}".format(args.lora_dropout))
-            print("LoRA target modules: {}".format(args.lora_target_modules))
-            print("Freeze base model: {}".format(args.freeze_base_model))
-            print("Pre-trained args path: {}".format(args.pretrained_args_path))
-            print("Pre-trained ckpt path: {}".format(args.pretrained_ckpt_path))
 
         if args.resume_model_path is not None:
             save_path = args.resume_model_path
         else:
-            # Generate new save path with timestamp if not resuming
             from datetime import datetime
             time = datetime.now()
             time = time.strftime("%Y-%m-%d-%H:%M:%S")
@@ -189,7 +128,7 @@ def model_training(args):
             save_path = f"{args.save_dir}/training_log/{args.name}/{time}/"
             os.makedirs(save_path, exist_ok=True)
 
-        # Save arguments to JSON file for future reference
+        # Save args
         args_dict = vars(args)
         args_dict = {k: v if not isinstance(v, (StateNormalizer, ObservationNormalizer)) else v.to_dict() for k, v in args_dict.items() }
 
@@ -198,14 +137,14 @@ def model_training(args):
     else:
         save_path = None
 
-    # Set random seed for reproducible experiments across all GPUs
+    # set seed
     set_seed(args.seed + global_rank)
 
-    # Extract key training parameters for later use
+    # training parameters
     train_epochs = args.train_epochs
     batch_size = args.batch_size
     
-    # Set up data loaders with distributed sampling
+    # set up data loaders
     aug = StatePerturbation(augment_prob=args.augment_prob, device=args.device) if args.use_data_augment else None
     train_set = DiffusionPlannerData(args.train_set, args.train_set_list, args.agent_num, args.predicted_neighbor_num, args.future_len)
     train_sampler = DistributedSampler(train_set, num_replicas=ddp.get_world_size(), rank=global_rank, shuffle=True)
@@ -217,52 +156,8 @@ def model_training(args):
     if args.ddp:
         torch.distributed.barrier()
 
-    # Initialize and configure diffusion planner model
-    if args.use_lora:
-        # For LoRA fine-tuning, we load the pre-trained model
-        try:
-            import sys
-            sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-            # __file__ 是 Python 的内置变量，表示当前脚本的文件名（包含路径信息）
-            # os.path.abspath(__file__) 用于获取当前脚本的绝对路径
-            # os.path.dirname(...) 用于获取该绝对路径所在的目录（即当前脚本所在的文件夹路径）
-            # sys.path.append(...) 将这个目录添加到 Python 的模块搜索路径中
-
-            from lora_fine_tuning import load_pretrained_model_with_lora
-            
-            # Create a config-like object for LoRA parameters
-            class LoRAConfig:
-                def __init__(self, rank, alpha, dropout, target_modules, freeze_base):
-                    self.lora_rank = rank
-                    self.lora_alpha = alpha
-                    self.lora_dropout = dropout
-                    self.lora_target_modules = target_modules
-                    self.freeze_base_model = freeze_base
-            
-            lora_config = LoRAConfig(
-                args.lora_rank,
-                args.lora_alpha,
-                args.lora_dropout,
-                args.lora_target_modules,
-                args.freeze_base_model
-            )
-            
-            # Load pre-trained model with LoRA
-            diffusion_planner = load_pretrained_model_with_lora(
-                args.pretrained_args_path, 
-                args.pretrained_ckpt_path, 
-                lora_config
-            )
-            
-            if global_rank == 0:
-                print("Pre-trained model loaded with LoRA applied")
-        except ImportError as e:
-            print(f"Failed to load pre-trained model with LoRA: {e}")
-            raise
-    else:
-        # Standard training without LoRA
-        diffusion_planner = Diffusion_Planner(args)
-    
+    # set up model
+    diffusion_planner = Diffusion_Planner(args)
     diffusion_planner = diffusion_planner.to(rank if args.device == 'cuda' else args.device)
 
     if args.ddp:
@@ -276,58 +171,34 @@ def model_training(args):
         )
     
     if global_rank == 0:
-        total_params = sum(p.numel() for p in ddp.get_model(diffusion_planner, args.ddp).parameters())
-        trainable_params = sum(p.numel() for p in ddp.get_model(diffusion_planner, args.ddp).parameters() if p.requires_grad)
-        print("Total Model Params: {}".format(total_params))
-        print("Trainable Model Params: {}".format(trainable_params))
+        print("Model Params: {}".format(sum(p.numel() for p in ddp.get_model(diffusion_planner, args.ddp).parameters())))
 
-    # Set up optimizer and learning rate scheduler
-    # When using LoRA, we might want to use a different learning rate for LoRA parameters
-    model_params = ddp.get_model(diffusion_planner, args.ddp).parameters()
-    if args.use_lora:
-        # Separate LoRA parameters from other parameters for different learning rates
-        lora_params = []
-        base_params = []
-        for name, param in ddp.get_model(diffusion_planner, args.ddp).named_parameters():
-            if 'lora' in name:
-                lora_params.append(param)
-            else:
-                base_params.append(param)
-        
-        params = [
-            {'params': base_params, 'lr': args.learning_rate},
-            {'params': lora_params, 'lr': args.lora_lr}
-            # 为基础参数设置常规学习率 args.learning_rate
-            # 为 LoRA 参数设置专门的学习率 args.lora_lr（通常远大于基础参数的学习率，因为 LoRA 参数数量少，需要更大的更新步长）
-
-        ]
-    else:
-        params = [{'params': model_params, 'lr': args.learning_rate}]
+    # optimizer
+    params = [{'params': ddp.get_model(diffusion_planner, args.ddp).parameters(), 'lr': args.learning_rate}]
 
     optimizer = optim.AdamW(params)
     scheduler = CosineAnnealingWarmUpRestarts(optimizer, train_epochs, args.warm_up_epoch)
 
-    if args.resume_model_path is not None and not args.use_lora:
+    if args.resume_model_path is not None:
         print(f"Model loaded from {args.resume_model_path}")
         diffusion_planner, optimizer, scheduler, init_epoch, wandb_id, model_ema = resume_model(args.resume_model_path, diffusion_planner, optimizer, scheduler, model_ema, args.device)
     else:
         init_epoch = 0
         wandb_id = None
 
-    # Initialize logging system
+    # logger
     wandb_logger = Logger(args.name, args.notes, args, wandb_resume_id=wandb_id, save_path=save_path, rank=global_rank) 
 
     if args.ddp:
         torch.distributed.barrier()
 
-    # Main training loop over epochs
+    # begin training
     for epoch in range(init_epoch, train_epochs):
         if global_rank == 0:
             print(f"Epoch {epoch+1}/{train_epochs}")
-        # 对于LoRA训练，启用梯度检查
-        check_grad = args.use_lora
-        train_loss, train_total_loss = train_epoch(train_loader, diffusion_planner, optimizer, args, model_ema, aug, check_grad)
+        train_loss, train_total_loss = train_epoch(train_loader, diffusion_planner, optimizer, args, model_ema, aug)
         
+
 
         if global_rank == 0:
             lr_dict = {'lr': optimizer.param_groups[0]['lr']}
@@ -335,7 +206,7 @@ def model_training(args):
             wandb_logger.log_metrics({f"lr/{k}": v for k, v in lr_dict.items()}, step=epoch+1)
 
             if (epoch+1) % args.save_utd == 0:
-                # Save model checkpoint at specified intervals
+                # save model at the end of epoch
                 save_model(diffusion_planner, optimizer, scheduler, save_path, epoch, train_total_loss, wandb_logger.id, model_ema.ema)
                 print(f"Model saved in {save_path}\n")
 

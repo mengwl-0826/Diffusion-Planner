@@ -2,6 +2,7 @@
 import torch
 import torch.fx
 import torch.nn as nn
+import sys
 
 from diffusion_planner.model.module.encoder import Encoder
 from diffusion_planner.model.module.decoder import Decoder
@@ -101,3 +102,14 @@ class Diffusion_Planner_Decoder(nn.Module):
         decoder_outputs = self.decoder(encoder_outputs, inputs)
         
         return decoder_outputs
+
+
+if __name__ == "__main__":
+    # 尝试实例化类（根据实际参数调整）
+    test = Diffusion_Planner(
+        input_dim=64,
+        hidden_dim=128,
+        num_layers=3,
+        diffusion_steps=100
+    )
+    print("Diffusion_Planner 实例化成功！")

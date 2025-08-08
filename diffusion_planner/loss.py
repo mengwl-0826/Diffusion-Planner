@@ -45,7 +45,7 @@ def diffusion_loss_func(
     
     merged_inputs = {
         **inputs,
-        "sampled_trajectories": xT,
+        "sampled_trajectories": xT.requires_grad_(True),
         "diffusion_time": t,
     }
 
@@ -67,5 +67,8 @@ def diffusion_loss_func(
     loss["ego_planning_loss"] = dpm_loss[:, 0, :].mean()
 
     assert not torch.isnan(dpm_loss).sum(), f"loss cannot be nan, z={z}"
+    print(f"Model requires grad: {any(p.requires_grad for p in model.parameters())}")
+    print(f"Input requires grad: {merged_inputs['sampled_trajectories'].requires_grad}")
+    print(f"Loss requires grad: {loss['ego_planning_loss'].requires_grad}")
 
     return loss, decoder_output
