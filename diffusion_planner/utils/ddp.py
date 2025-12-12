@@ -1,5 +1,6 @@
 import os
 import torch
+import torch.fx
 import torch.distributed as dist
 from torch.distributed import init_process_group
 import subprocess

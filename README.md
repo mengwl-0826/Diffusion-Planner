@@ -131,10 +131,11 @@ wget -P ./checkpoints https://huggingface.co/ZhengYinan2001/Diffusion-Planner/re
 1. Set up configuration in sim_diffusion_planner_runner.sh.
 2. Run
 ```bash 
-bash sim_diffusion_planner_runner.sh
+bash sim_diffusion_planner_runner.sh  #mengwl: 推理
+run_nuboard.ipynb #mengwl:可视化nuplan结果
 ```
 - Visualize the results
-1. Set up configuration in run_nuboard.ipynb.
+1. Set up configuration in run_nuboard.ipynb. 
 2. Launch Jupyter Notebook or JupyterLab to execute run_nuboard.ipynb.
 
 ### Classifer Guidance Demo
@@ -143,7 +144,7 @@ bash sim_diffusion_planner_runner.sh
 2. Run
 
 ```bash
-bash sim_guidance_demo.sh
+bash sim_guidance_demo.sh #mengwl:guidance demo
 ```
 
 Further detail see [Classifier Guidance Doc](diffusion_planner/model/guidance/documentation_guidance.md)
@@ -152,13 +153,14 @@ Further detail see [Classifier Guidance Doc](diffusion_planner/model/guidance/do
 - Preprocess the training data
 ```bash
 chmod +x data_process.sh
-./data_process.sh
+./data_process.sh   #mengwl: 数据预处理
 ```
 - Run the training code
 ```bash
 chmod +x torch_run.sh
-./torch_run.sh
+./torch_run.sh    #mengwl:训练
 ```
+
 
 ## Bibtex
 

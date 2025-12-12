@@ -1,5 +1,6 @@
 import math
 import torch
+import torch.fx
 import torch.nn as nn
 from timm.models.layers import Mlp
 
@@ -73,7 +74,7 @@ class DiTBlock(nn.Module):
         self.attn = nn.MultiheadAttention(dim, heads, dropout, batch_first=True)
         self.norm2 = nn.LayerNorm(dim)
         mlp_hidden_dim = int(dim * mlp_ratio)
-        approx_gelu = lambda: nn.GELU(approximate="tanh")
+        approx_gelu = lambda: nn.GELU()
         self.mlp1 = Mlp(in_features=dim, hidden_features=mlp_hidden_dim, act_layer=approx_gelu, drop=0)
         self.adaLN_modulation = nn.Sequential(
             nn.SiLU(),
@@ -111,7 +112,7 @@ class FinalLayer(nn.Module):
         self.proj = nn.Sequential(
             nn.LayerNorm(hidden_size),
             nn.Linear(hidden_size, hidden_size * 4, bias=True),
-            nn.GELU(approximate="tanh"),
+            nn.GELU(),
             nn.LayerNorm(hidden_size * 4),
             nn.Linear(hidden_size * 4, output_size, bias=True)
         )

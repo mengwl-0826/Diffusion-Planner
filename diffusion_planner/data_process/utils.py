@@ -10,6 +10,7 @@ Categories:
 
 import numpy as np
 import torch
+import torch.fx
 
 from nuplan.planning.training.preprocessing.utils.agents_preprocessing import EgoInternalIndex, AgentInternalIndex
 

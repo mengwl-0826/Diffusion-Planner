@@ -1,6 +1,6 @@
 from typing import List
 import torch
-
+import torch.fx
 from diffusion_planner.model.diffusion_utils.sde import VPSDE_linear
 from diffusion_planner.model.guidance.collision import collision_guidance_fn
 

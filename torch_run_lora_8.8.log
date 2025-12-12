@@ -1,0 +1,853 @@
+do not use ddp, train on GPU 0
+global rank: 0, rank: 0
+------------- diffusion-planner-training -------------
+Batch size: 1
+Learning rate: 0.0005
+Use device: cuda
+Using LoRA fine-tuning
+LoRA rank: 8
+LoRA alpha: 16.0
+LoRA dropout: 0.05
+LoRA target modules: ['out_proj']
+Freeze base model: True
+Pre-trained args path: /media/data/Down/d2d/zichennuplan/Diffusion-Planner/checkpoints/args.json
+Pre-trained ckpt path: /media/data/Down/d2d/zichennuplan/Diffusion-Planner/checkpoints/model.pth
+Dataset Prepared: 3 train data
+
+
+[95m[1m=== 开始加载模型 (配置: /media/data/Down/d2d/zichennuplan/Diffusion-Planner/checkpoints/args.json, 权重: /media/data/Down/d2d/zichennuplan/Diffusion-Planner/checkpoints/model.pth ===[0m
+[94m→ 加载预训练权重...[0m
+
+[95m[1m=== 初始模型状态 ===[0m
+[94m→ 参数总数: 6,042,628 | 可训练: 6,042,628 (100.00%)[0m
+  [96mencoder.encoder.neighbor_encoder.type_emb.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128, 3)[0m
+  [96mencoder.encoder.neighbor_encoder.type_emb.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.channel_pre_project.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128, 9)[0m
+  [96mencoder.encoder.neighbor_encoder.channel_pre_project.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.channel_pre_project.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128, 128)[0m
+  [96mencoder.encoder.neighbor_encoder.channel_pre_project.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.token_pre_project.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64, 21)[0m
+  [96mencoder.encoder.neighbor_encoder.token_pre_project.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mencoder.encoder.neighbor_encoder.token_pre_project.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64, 64)[0m
+  [96mencoder.encoder.neighbor_encoder.token_pre_project.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.0.norm1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.0.norm1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.0.channels_mlp.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128, 128)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.0.channels_mlp.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.0.channels_mlp.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128, 128)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.0.channels_mlp.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.0.norm2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.0.norm2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.0.tokens_mlp.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64, 64)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.0.tokens_mlp.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.0.tokens_mlp.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64, 64)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.0.tokens_mlp.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.1.norm1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.1.norm1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.1.channels_mlp.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128, 128)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.1.channels_mlp.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.1.channels_mlp.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128, 128)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.1.channels_mlp.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.1.norm2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.1.norm2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.1.tokens_mlp.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64, 64)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.1.tokens_mlp.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.1.tokens_mlp.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64, 64)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.1.tokens_mlp.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.2.norm1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.2.norm1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.2.channels_mlp.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128, 128)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.2.channels_mlp.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.2.channels_mlp.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128, 128)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.2.channels_mlp.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.2.norm2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.2.norm2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.2.tokens_mlp.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64, 64)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.2.tokens_mlp.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.2.tokens_mlp.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64, 64)[0m
+  [96mencoder.encoder.neighbor_encoder.blocks.2.tokens_mlp.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mencoder.encoder.neighbor_encoder.norm.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.norm.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.neighbor_encoder.emb_project.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 128)[0m
+  [96mencoder.encoder.neighbor_encoder.emb_project.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.neighbor_encoder.emb_project.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 192)[0m
+  [96mencoder.encoder.neighbor_encoder.emb_project.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.static_encoder.projection.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 10)[0m
+  [96mencoder.encoder.static_encoder.projection.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.static_encoder.projection.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 192)[0m
+  [96mencoder.encoder.static_encoder.projection.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.lane_encoder.speed_limit_emb.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128, 1)[0m
+  [96mencoder.encoder.lane_encoder.speed_limit_emb.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.unknown_speed_emb.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(1, 128)[0m
+  [96mencoder.encoder.lane_encoder.traffic_emb.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128, 4)[0m
+  [96mencoder.encoder.lane_encoder.traffic_emb.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.channel_pre_project.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128, 8)[0m
+  [96mencoder.encoder.lane_encoder.channel_pre_project.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.channel_pre_project.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128, 128)[0m
+  [96mencoder.encoder.lane_encoder.channel_pre_project.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.token_pre_project.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64, 20)[0m
+  [96mencoder.encoder.lane_encoder.token_pre_project.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mencoder.encoder.lane_encoder.token_pre_project.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64, 64)[0m
+  [96mencoder.encoder.lane_encoder.token_pre_project.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.0.norm1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.0.norm1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.0.channels_mlp.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128, 128)[0m
+  [96mencoder.encoder.lane_encoder.blocks.0.channels_mlp.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.0.channels_mlp.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128, 128)[0m
+  [96mencoder.encoder.lane_encoder.blocks.0.channels_mlp.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.0.norm2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.0.norm2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.0.tokens_mlp.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64, 64)[0m
+  [96mencoder.encoder.lane_encoder.blocks.0.tokens_mlp.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.0.tokens_mlp.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64, 64)[0m
+  [96mencoder.encoder.lane_encoder.blocks.0.tokens_mlp.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.1.norm1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.1.norm1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.1.channels_mlp.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128, 128)[0m
+  [96mencoder.encoder.lane_encoder.blocks.1.channels_mlp.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.1.channels_mlp.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128, 128)[0m
+  [96mencoder.encoder.lane_encoder.blocks.1.channels_mlp.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.1.norm2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.1.norm2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.1.tokens_mlp.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64, 64)[0m
+  [96mencoder.encoder.lane_encoder.blocks.1.tokens_mlp.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.1.tokens_mlp.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64, 64)[0m
+  [96mencoder.encoder.lane_encoder.blocks.1.tokens_mlp.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.2.norm1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.2.norm1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.2.channels_mlp.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128, 128)[0m
+  [96mencoder.encoder.lane_encoder.blocks.2.channels_mlp.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.2.channels_mlp.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128, 128)[0m
+  [96mencoder.encoder.lane_encoder.blocks.2.channels_mlp.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.2.norm2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.2.norm2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.2.tokens_mlp.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64, 64)[0m
+  [96mencoder.encoder.lane_encoder.blocks.2.tokens_mlp.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mencoder.encoder.lane_encoder.blocks.2.tokens_mlp.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64, 64)[0m
+  [96mencoder.encoder.lane_encoder.blocks.2.tokens_mlp.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mencoder.encoder.lane_encoder.norm.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.norm.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(128,)[0m
+  [96mencoder.encoder.lane_encoder.emb_project.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 128)[0m
+  [96mencoder.encoder.lane_encoder.emb_project.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.lane_encoder.emb_project.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 192)[0m
+  [96mencoder.encoder.lane_encoder.emb_project.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.fusion.blocks.0.norm1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.fusion.blocks.0.norm1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.fusion.blocks.0.attn.in_proj_weight[0m | 可训练: [92mTrue [0m | 形状: [93m(576, 192)[0m
+  [96mencoder.encoder.fusion.blocks.0.attn.in_proj_bias[0m | 可训练: [92mTrue [0m | 形状: [93m(576,)[0m
+  [96mencoder.encoder.fusion.blocks.0.attn.out_proj.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 192)[0m
+  [96mencoder.encoder.fusion.blocks.0.attn.out_proj.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.fusion.blocks.0.norm2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.fusion.blocks.0.norm2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.fusion.blocks.0.mlp.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(768, 192)[0m
+  [96mencoder.encoder.fusion.blocks.0.mlp.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(768,)[0m
+  [96mencoder.encoder.fusion.blocks.0.mlp.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 768)[0m
+  [96mencoder.encoder.fusion.blocks.0.mlp.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.fusion.blocks.1.norm1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.fusion.blocks.1.norm1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.fusion.blocks.1.attn.in_proj_weight[0m | 可训练: [92mTrue [0m | 形状: [93m(576, 192)[0m
+  [96mencoder.encoder.fusion.blocks.1.attn.in_proj_bias[0m | 可训练: [92mTrue [0m | 形状: [93m(576,)[0m
+  [96mencoder.encoder.fusion.blocks.1.attn.out_proj.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 192)[0m
+  [96mencoder.encoder.fusion.blocks.1.attn.out_proj.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.fusion.blocks.1.norm2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.fusion.blocks.1.norm2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.fusion.blocks.1.mlp.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(768, 192)[0m
+  [96mencoder.encoder.fusion.blocks.1.mlp.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(768,)[0m
+  [96mencoder.encoder.fusion.blocks.1.mlp.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 768)[0m
+  [96mencoder.encoder.fusion.blocks.1.mlp.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.fusion.blocks.2.norm1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.fusion.blocks.2.norm1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.fusion.blocks.2.attn.in_proj_weight[0m | 可训练: [92mTrue [0m | 形状: [93m(576, 192)[0m
+  [96mencoder.encoder.fusion.blocks.2.attn.in_proj_bias[0m | 可训练: [92mTrue [0m | 形状: [93m(576,)[0m
+  [96mencoder.encoder.fusion.blocks.2.attn.out_proj.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 192)[0m
+  [96mencoder.encoder.fusion.blocks.2.attn.out_proj.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.fusion.blocks.2.norm2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.fusion.blocks.2.norm2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.fusion.blocks.2.mlp.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(768, 192)[0m
+  [96mencoder.encoder.fusion.blocks.2.mlp.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(768,)[0m
+  [96mencoder.encoder.fusion.blocks.2.mlp.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 768)[0m
+  [96mencoder.encoder.fusion.blocks.2.mlp.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.fusion.norm.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.fusion.norm.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mencoder.encoder.pos_emb.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 7)[0m
+  [96mencoder.encoder.pos_emb.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.route_encoder.channel_pre_project.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64, 4)[0m
+  [96mdecoder.decoder.dit.route_encoder.channel_pre_project.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mdecoder.decoder.dit.route_encoder.channel_pre_project.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64, 64)[0m
+  [96mdecoder.decoder.dit.route_encoder.channel_pre_project.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mdecoder.decoder.dit.route_encoder.token_pre_project.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(32, 500)[0m
+  [96mdecoder.decoder.dit.route_encoder.token_pre_project.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(32,)[0m
+  [96mdecoder.decoder.dit.route_encoder.token_pre_project.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(32, 32)[0m
+  [96mdecoder.decoder.dit.route_encoder.token_pre_project.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(32,)[0m
+  [96mdecoder.decoder.dit.route_encoder.Mixer.norm1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mdecoder.decoder.dit.route_encoder.Mixer.norm1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mdecoder.decoder.dit.route_encoder.Mixer.channels_mlp.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64, 64)[0m
+  [96mdecoder.decoder.dit.route_encoder.Mixer.channels_mlp.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mdecoder.decoder.dit.route_encoder.Mixer.channels_mlp.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64, 64)[0m
+  [96mdecoder.decoder.dit.route_encoder.Mixer.channels_mlp.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mdecoder.decoder.dit.route_encoder.Mixer.norm2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mdecoder.decoder.dit.route_encoder.Mixer.norm2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mdecoder.decoder.dit.route_encoder.Mixer.tokens_mlp.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(32, 32)[0m
+  [96mdecoder.decoder.dit.route_encoder.Mixer.tokens_mlp.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(32,)[0m
+  [96mdecoder.decoder.dit.route_encoder.Mixer.tokens_mlp.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(32, 32)[0m
+  [96mdecoder.decoder.dit.route_encoder.Mixer.tokens_mlp.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(32,)[0m
+  [96mdecoder.decoder.dit.route_encoder.norm.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mdecoder.decoder.dit.route_encoder.norm.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(64,)[0m
+  [96mdecoder.decoder.dit.route_encoder.emb_project.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 64)[0m
+  [96mdecoder.decoder.dit.route_encoder.emb_project.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.route_encoder.emb_project.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 192)[0m
+  [96mdecoder.decoder.dit.route_encoder.emb_project.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.agent_embedding.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(2, 192)[0m
+  [96mdecoder.decoder.dit.preproj.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(512, 324)[0m
+  [96mdecoder.decoder.dit.preproj.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(512,)[0m
+  [96mdecoder.decoder.dit.preproj.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 512)[0m
+  [96mdecoder.decoder.dit.preproj.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.t_embedder.mlp.0.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 256)[0m
+  [96mdecoder.decoder.dit.t_embedder.mlp.0.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.t_embedder.mlp.2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 192)[0m
+  [96mdecoder.decoder.dit.t_embedder.mlp.2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.0.norm1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.0.norm1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.0.attn.in_proj_weight[0m | 可训练: [92mTrue [0m | 形状: [93m(576, 192)[0m
+  [96mdecoder.decoder.dit.blocks.0.attn.in_proj_bias[0m | 可训练: [92mTrue [0m | 形状: [93m(576,)[0m
+  [96mdecoder.decoder.dit.blocks.0.attn.out_proj.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 192)[0m
+  [96mdecoder.decoder.dit.blocks.0.attn.out_proj.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.0.norm2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.0.norm2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.0.mlp1.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(768, 192)[0m
+  [96mdecoder.decoder.dit.blocks.0.mlp1.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(768,)[0m
+  [96mdecoder.decoder.dit.blocks.0.mlp1.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 768)[0m
+  [96mdecoder.decoder.dit.blocks.0.mlp1.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.0.adaLN_modulation.1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(1152, 192)[0m
+  [96mdecoder.decoder.dit.blocks.0.adaLN_modulation.1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(1152,)[0m
+  [96mdecoder.decoder.dit.blocks.0.norm3.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.0.norm3.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.0.cross_attn.in_proj_weight[0m | 可训练: [92mTrue [0m | 形状: [93m(576, 192)[0m
+  [96mdecoder.decoder.dit.blocks.0.cross_attn.in_proj_bias[0m | 可训练: [92mTrue [0m | 形状: [93m(576,)[0m
+  [96mdecoder.decoder.dit.blocks.0.cross_attn.out_proj.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 192)[0m
+  [96mdecoder.decoder.dit.blocks.0.cross_attn.out_proj.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.0.norm4.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.0.norm4.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.0.mlp2.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(768, 192)[0m
+  [96mdecoder.decoder.dit.blocks.0.mlp2.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(768,)[0m
+  [96mdecoder.decoder.dit.blocks.0.mlp2.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 768)[0m
+  [96mdecoder.decoder.dit.blocks.0.mlp2.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.1.norm1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.1.norm1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.1.attn.in_proj_weight[0m | 可训练: [92mTrue [0m | 形状: [93m(576, 192)[0m
+  [96mdecoder.decoder.dit.blocks.1.attn.in_proj_bias[0m | 可训练: [92mTrue [0m | 形状: [93m(576,)[0m
+  [96mdecoder.decoder.dit.blocks.1.attn.out_proj.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 192)[0m
+  [96mdecoder.decoder.dit.blocks.1.attn.out_proj.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.1.norm2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.1.norm2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.1.mlp1.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(768, 192)[0m
+  [96mdecoder.decoder.dit.blocks.1.mlp1.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(768,)[0m
+  [96mdecoder.decoder.dit.blocks.1.mlp1.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 768)[0m
+  [96mdecoder.decoder.dit.blocks.1.mlp1.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.1.adaLN_modulation.1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(1152, 192)[0m
+  [96mdecoder.decoder.dit.blocks.1.adaLN_modulation.1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(1152,)[0m
+  [96mdecoder.decoder.dit.blocks.1.norm3.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.1.norm3.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.1.cross_attn.in_proj_weight[0m | 可训练: [92mTrue [0m | 形状: [93m(576, 192)[0m
+  [96mdecoder.decoder.dit.blocks.1.cross_attn.in_proj_bias[0m | 可训练: [92mTrue [0m | 形状: [93m(576,)[0m
+  [96mdecoder.decoder.dit.blocks.1.cross_attn.out_proj.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 192)[0m
+  [96mdecoder.decoder.dit.blocks.1.cross_attn.out_proj.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.1.norm4.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.1.norm4.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.1.mlp2.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(768, 192)[0m
+  [96mdecoder.decoder.dit.blocks.1.mlp2.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(768,)[0m
+  [96mdecoder.decoder.dit.blocks.1.mlp2.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 768)[0m
+  [96mdecoder.decoder.dit.blocks.1.mlp2.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.2.norm1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.2.norm1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.2.attn.in_proj_weight[0m | 可训练: [92mTrue [0m | 形状: [93m(576, 192)[0m
+  [96mdecoder.decoder.dit.blocks.2.attn.in_proj_bias[0m | 可训练: [92mTrue [0m | 形状: [93m(576,)[0m
+  [96mdecoder.decoder.dit.blocks.2.attn.out_proj.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 192)[0m
+  [96mdecoder.decoder.dit.blocks.2.attn.out_proj.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.2.norm2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.2.norm2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.2.mlp1.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(768, 192)[0m
+  [96mdecoder.decoder.dit.blocks.2.mlp1.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(768,)[0m
+  [96mdecoder.decoder.dit.blocks.2.mlp1.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 768)[0m
+  [96mdecoder.decoder.dit.blocks.2.mlp1.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.2.adaLN_modulation.1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(1152, 192)[0m
+  [96mdecoder.decoder.dit.blocks.2.adaLN_modulation.1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(1152,)[0m
+  [96mdecoder.decoder.dit.blocks.2.norm3.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.2.norm3.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.2.cross_attn.in_proj_weight[0m | 可训练: [92mTrue [0m | 形状: [93m(576, 192)[0m
+  [96mdecoder.decoder.dit.blocks.2.cross_attn.in_proj_bias[0m | 可训练: [92mTrue [0m | 形状: [93m(576,)[0m
+  [96mdecoder.decoder.dit.blocks.2.cross_attn.out_proj.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 192)[0m
+  [96mdecoder.decoder.dit.blocks.2.cross_attn.out_proj.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.2.norm4.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.2.norm4.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.blocks.2.mlp2.fc1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(768, 192)[0m
+  [96mdecoder.decoder.dit.blocks.2.mlp2.fc1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(768,)[0m
+  [96mdecoder.decoder.dit.blocks.2.mlp2.fc2.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 768)[0m
+  [96mdecoder.decoder.dit.blocks.2.mlp2.fc2.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.final_layer.norm_final.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.final_layer.norm_final.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.final_layer.proj.0.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.final_layer.proj.0.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(192,)[0m
+  [96mdecoder.decoder.dit.final_layer.proj.1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(768, 192)[0m
+  [96mdecoder.decoder.dit.final_layer.proj.1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(768,)[0m
+  [96mdecoder.decoder.dit.final_layer.proj.3.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(768,)[0m
+  [96mdecoder.decoder.dit.final_layer.proj.3.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(768,)[0m
+  [96mdecoder.decoder.dit.final_layer.proj.4.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(324, 768)[0m
+  [96mdecoder.decoder.dit.final_layer.proj.4.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(324,)[0m
+  [96mdecoder.decoder.dit.final_layer.adaLN_modulation.1.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(384, 192)[0m
+  [96mdecoder.decoder.dit.final_layer.adaLN_modulation.1.bias[0m | 可训练: [92mTrue [0m | 形状: [93m(384,)[0m
+[94m→ 应用LoRA适配器...[0m
+
+[95m[1m=== LoRA应用后状态 ===[0m
+[94m→ 参数总数: 6,070,276 | 可训练: 27,648 (0.46%)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.0.attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.0.attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.1.attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.1.attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.2.attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.2.attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.cross_attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.cross_attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.cross_attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.cross_attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.cross_attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.cross_attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+
+[95m[1m=== 模型冻结前状态 ===[0m
+[94m→ 参数总数: 6,070,276 | 可训练: 27,648 (0.46%)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.type_emb.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128, 3)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.type_emb.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.channel_pre_project.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128, 9)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.channel_pre_project.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.channel_pre_project.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128, 128)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.channel_pre_project.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.token_pre_project.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64, 21)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.token_pre_project.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.token_pre_project.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64, 64)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.token_pre_project.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.0.norm1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.0.norm1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.0.channels_mlp.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128, 128)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.0.channels_mlp.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.0.channels_mlp.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128, 128)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.0.channels_mlp.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.0.norm2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.0.norm2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.0.tokens_mlp.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64, 64)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.0.tokens_mlp.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.0.tokens_mlp.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64, 64)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.0.tokens_mlp.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.1.norm1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.1.norm1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.1.channels_mlp.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128, 128)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.1.channels_mlp.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.1.channels_mlp.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128, 128)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.1.channels_mlp.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.1.norm2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.1.norm2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.1.tokens_mlp.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64, 64)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.1.tokens_mlp.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.1.tokens_mlp.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64, 64)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.1.tokens_mlp.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.2.norm1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.2.norm1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.2.channels_mlp.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128, 128)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.2.channels_mlp.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.2.channels_mlp.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128, 128)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.2.channels_mlp.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.2.norm2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.2.norm2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.2.tokens_mlp.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64, 64)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.2.tokens_mlp.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.2.tokens_mlp.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64, 64)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.blocks.2.tokens_mlp.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.norm.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.norm.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.emb_project.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 128)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.emb_project.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.emb_project.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 192)[0m
+  [96mbase_model.model.encoder.encoder.neighbor_encoder.emb_project.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.static_encoder.projection.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 10)[0m
+  [96mbase_model.model.encoder.encoder.static_encoder.projection.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.static_encoder.projection.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 192)[0m
+  [96mbase_model.model.encoder.encoder.static_encoder.projection.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.speed_limit_emb.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128, 1)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.speed_limit_emb.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.unknown_speed_emb.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(1, 128)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.traffic_emb.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128, 4)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.traffic_emb.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.channel_pre_project.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128, 8)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.channel_pre_project.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.channel_pre_project.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128, 128)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.channel_pre_project.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.token_pre_project.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64, 20)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.token_pre_project.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.token_pre_project.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64, 64)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.token_pre_project.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.0.norm1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.0.norm1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.0.channels_mlp.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128, 128)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.0.channels_mlp.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.0.channels_mlp.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128, 128)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.0.channels_mlp.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.0.norm2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.0.norm2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.0.tokens_mlp.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64, 64)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.0.tokens_mlp.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.0.tokens_mlp.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64, 64)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.0.tokens_mlp.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.1.norm1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.1.norm1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.1.channels_mlp.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128, 128)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.1.channels_mlp.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.1.channels_mlp.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128, 128)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.1.channels_mlp.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.1.norm2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.1.norm2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.1.tokens_mlp.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64, 64)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.1.tokens_mlp.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.1.tokens_mlp.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64, 64)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.1.tokens_mlp.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.2.norm1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.2.norm1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.2.channels_mlp.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128, 128)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.2.channels_mlp.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.2.channels_mlp.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128, 128)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.2.channels_mlp.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.2.norm2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.2.norm2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.2.tokens_mlp.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64, 64)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.2.tokens_mlp.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.2.tokens_mlp.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64, 64)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.blocks.2.tokens_mlp.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.norm.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.norm.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(128,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.emb_project.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 128)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.emb_project.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.emb_project.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 192)[0m
+  [96mbase_model.model.encoder.encoder.lane_encoder.emb_project.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.0.norm1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.0.norm1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.0.attn.in_proj_weight[0m | 可训练: [91mFalse[0m | 形状: [93m(576, 192)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.0.attn.in_proj_bias[0m | 可训练: [91mFalse[0m | 形状: [93m(576,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.0.attn.out_proj.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 192)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.0.attn.out_proj.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.0.attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.0.attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.0.norm2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.0.norm2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.0.mlp.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(768, 192)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.0.mlp.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(768,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.0.mlp.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 768)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.0.mlp.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.1.norm1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.1.norm1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.1.attn.in_proj_weight[0m | 可训练: [91mFalse[0m | 形状: [93m(576, 192)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.1.attn.in_proj_bias[0m | 可训练: [91mFalse[0m | 形状: [93m(576,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.1.attn.out_proj.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 192)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.1.attn.out_proj.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.1.attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.1.attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.1.norm2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.1.norm2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.1.mlp.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(768, 192)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.1.mlp.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(768,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.1.mlp.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 768)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.1.mlp.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.2.norm1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.2.norm1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.2.attn.in_proj_weight[0m | 可训练: [91mFalse[0m | 形状: [93m(576, 192)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.2.attn.in_proj_bias[0m | 可训练: [91mFalse[0m | 形状: [93m(576,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.2.attn.out_proj.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 192)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.2.attn.out_proj.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.2.attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.2.attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.2.norm2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.2.norm2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.2.mlp.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(768, 192)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.2.mlp.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(768,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.2.mlp.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 768)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.2.mlp.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.norm.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.fusion.norm.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.encoder.encoder.pos_emb.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 7)[0m
+  [96mbase_model.model.encoder.encoder.pos_emb.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.channel_pre_project.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64, 4)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.channel_pre_project.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.channel_pre_project.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64, 64)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.channel_pre_project.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.token_pre_project.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(32, 500)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.token_pre_project.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(32,)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.token_pre_project.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(32, 32)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.token_pre_project.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(32,)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.Mixer.norm1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.Mixer.norm1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.Mixer.channels_mlp.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64, 64)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.Mixer.channels_mlp.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.Mixer.channels_mlp.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64, 64)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.Mixer.channels_mlp.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.Mixer.norm2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.Mixer.norm2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.Mixer.tokens_mlp.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(32, 32)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.Mixer.tokens_mlp.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(32,)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.Mixer.tokens_mlp.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(32, 32)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.Mixer.tokens_mlp.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(32,)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.norm.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.norm.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(64,)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.emb_project.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 64)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.emb_project.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.emb_project.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.route_encoder.emb_project.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.agent_embedding.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(2, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.preproj.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(512, 324)[0m
+  [96mbase_model.model.decoder.decoder.dit.preproj.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(512,)[0m
+  [96mbase_model.model.decoder.decoder.dit.preproj.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 512)[0m
+  [96mbase_model.model.decoder.decoder.dit.preproj.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.t_embedder.mlp.0.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 256)[0m
+  [96mbase_model.model.decoder.decoder.dit.t_embedder.mlp.0.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.t_embedder.mlp.2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.t_embedder.mlp.2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.norm1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.norm1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.attn.in_proj_weight[0m | 可训练: [91mFalse[0m | 形状: [93m(576, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.attn.in_proj_bias[0m | 可训练: [91mFalse[0m | 形状: [93m(576,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.attn.out_proj.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.attn.out_proj.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.norm2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.norm2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.mlp1.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(768, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.mlp1.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(768,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.mlp1.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 768)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.mlp1.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.adaLN_modulation.1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(1152, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.adaLN_modulation.1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(1152,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.norm3.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.norm3.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.cross_attn.in_proj_weight[0m | 可训练: [91mFalse[0m | 形状: [93m(576, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.cross_attn.in_proj_bias[0m | 可训练: [91mFalse[0m | 形状: [93m(576,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.cross_attn.out_proj.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.cross_attn.out_proj.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.cross_attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.cross_attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.norm4.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.norm4.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.mlp2.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(768, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.mlp2.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(768,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.mlp2.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 768)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.mlp2.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.norm1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.norm1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.attn.in_proj_weight[0m | 可训练: [91mFalse[0m | 形状: [93m(576, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.attn.in_proj_bias[0m | 可训练: [91mFalse[0m | 形状: [93m(576,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.attn.out_proj.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.attn.out_proj.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.norm2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.norm2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.mlp1.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(768, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.mlp1.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(768,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.mlp1.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 768)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.mlp1.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.adaLN_modulation.1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(1152, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.adaLN_modulation.1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(1152,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.norm3.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.norm3.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.cross_attn.in_proj_weight[0m | 可训练: [91mFalse[0m | 形状: [93m(576, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.cross_attn.in_proj_bias[0m | 可训练: [91mFalse[0m | 形状: [93m(576,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.cross_attn.out_proj.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.cross_attn.out_proj.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.cross_attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.cross_attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.norm4.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.norm4.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.mlp2.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(768, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.mlp2.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(768,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.mlp2.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 768)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.mlp2.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.norm1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.norm1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.attn.in_proj_weight[0m | 可训练: [91mFalse[0m | 形状: [93m(576, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.attn.in_proj_bias[0m | 可训练: [91mFalse[0m | 形状: [93m(576,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.attn.out_proj.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.attn.out_proj.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.norm2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.norm2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.mlp1.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(768, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.mlp1.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(768,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.mlp1.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 768)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.mlp1.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.adaLN_modulation.1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(1152, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.adaLN_modulation.1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(1152,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.norm3.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.norm3.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.cross_attn.in_proj_weight[0m | 可训练: [91mFalse[0m | 形状: [93m(576, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.cross_attn.in_proj_bias[0m | 可训练: [91mFalse[0m | 形状: [93m(576,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.cross_attn.out_proj.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.cross_attn.out_proj.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.cross_attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.cross_attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.norm4.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.norm4.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.mlp2.fc1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(768, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.mlp2.fc1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(768,)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.mlp2.fc2.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192, 768)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.mlp2.fc2.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.final_layer.norm_final.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.final_layer.norm_final.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.final_layer.proj.0.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.final_layer.proj.0.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(192,)[0m
+  [96mbase_model.model.decoder.decoder.dit.final_layer.proj.1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(768, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.final_layer.proj.1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(768,)[0m
+  [96mbase_model.model.decoder.decoder.dit.final_layer.proj.3.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(768,)[0m
+  [96mbase_model.model.decoder.decoder.dit.final_layer.proj.3.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(768,)[0m
+  [96mbase_model.model.decoder.decoder.dit.final_layer.proj.4.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(324, 768)[0m
+  [96mbase_model.model.decoder.decoder.dit.final_layer.proj.4.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(324,)[0m
+  [96mbase_model.model.decoder.decoder.dit.final_layer.adaLN_modulation.1.weight[0m | 可训练: [91mFalse[0m | 形状: [93m(384, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.final_layer.adaLN_modulation.1.bias[0m | 可训练: [91mFalse[0m | 形状: [93m(384,)[0m
+[94m→ 冻结基础模型参数...[0m
+
+[95m[1m=== 模型冻结后状态 ===[0m
+[94m→ 参数总数: 6,070,276 | 可训练: 27,648 (0.46%)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.0.attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.0.attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.1.attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.1.attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.2.attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.encoder.encoder.fusion.blocks.2.attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.cross_attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.0.cross_attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.cross_attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.1.cross_attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.cross_attn.out_proj.lora_A.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(8, 192)[0m
+  [96mbase_model.model.decoder.decoder.dit.blocks.2.cross_attn.out_proj.lora_B.default.weight[0m | 可训练: [92mTrue [0m | 形状: [93m(192, 8)[0m
+
+[95m[1m=== PEFT官方统计 ===[0m
+trainable params: 27,648 || all params: 6,070,276 || trainable%: 0.4554652869161139
+[92m✓ 基础模型冻结完成[0m
+Pre-trained model loaded with LoRA applied
+Total Model Params: 6070276
+Trainable Model Params: 27648
+Epoch 1/2
+编码器输出 - grad_fn类型: <class 'NoneType'>, 存在性: False, requires_grad: False
+解码器输出 - grad_fn类型: <class 'ViewBackward0'>, 存在性: True, requires_grad: True
+  梯度函数链头部: ViewBackward0
+字典键数量: 12
+所有键名: ['ego_current_state', 'neighbor_agents_past', 'lanes', 'lanes_speed_limit', 'lanes_has_speed_limit', 'route_lanes', 'route_lanes_speed_limit', 'route_lanes_has_speed_limit', 'static_objects', 'sampled_trajectories', 'diffusion_time', 'neighbor_current_mask']
+
+[94m=== 检查 merged_inputs 的梯度状态 ===[0m
+  [93mego_current_state[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 10)[0m | 类型: torch.float32
+  [93mneighbor_agents_past[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 32, 21, 11)[0m | 类型: torch.float32
+  [93mlanes[0m            | 状态: [91m无梯度[0m    | 形状: [94m(1, 70, 20, 12)[0m | 类型: torch.float32
+  [93mlanes_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 70, 1)[0m | 类型: torch.float32
+  [93mlanes_has_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 70, 1)[0m | 类型: torch.bool
+  [93mroute_lanes[0m      | 状态: [91m无梯度[0m    | 形状: [94m(1, 25, 20, 12)[0m | 类型: torch.float32
+  [93mroute_lanes_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 25, 1)[0m | 类型: torch.float32
+  [93mroute_lanes_has_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 25, 1)[0m | 类型: torch.bool
+  [93mstatic_objects[0m   | 状态: [91m无梯度[0m    | 形状: [94m(1, 5, 10)[0m | 类型: torch.float32
+  [93msampled_trajectories[0m | 状态: [92m需要梯度[0m   | 形状: [94m(1, 11, 81, 4)[0m | 类型: torch.float32
+  [93mdiffusion_time[0m   | 状态: [91m无梯度[0m    | 形状: [94m(1,)[0m   | 类型: torch.float32
+  [93mneighbor_current_mask[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 10)[0m | 类型: torch.bool
+
+[94m=== 统计摘要 ===
+总张量数: 12
+需要梯度的张量: 1 (8%)[0m
+
+[94m=== 检查 score 的梯度状态 ===[0m
+  [93mscore[0m            | 状态: [92m需要梯度[0m   | 形状: [94m(1, 11, 81, 4)[0m | 类型: torch.float32
+
+[94m=== 统计摘要 ===
+总张量数: 1
+需要梯度的张量: 1 (100%)[0m
+Model requires grad: True
+Input requires grad: True
+Loss requires grad: True
+编码器输出 - grad_fn类型: <class 'NoneType'>, 存在性: False, requires_grad: False
+解码器输出 - grad_fn类型: <class 'ViewBackward0'>, 存在性: True, requires_grad: True
+  梯度函数链头部: ViewBackward0
+字典键数量: 12
+所有键名: ['ego_current_state', 'neighbor_agents_past', 'lanes', 'lanes_speed_limit', 'lanes_has_speed_limit', 'route_lanes', 'route_lanes_speed_limit', 'route_lanes_has_speed_limit', 'static_objects', 'sampled_trajectories', 'diffusion_time', 'neighbor_current_mask']
+
+[94m=== 检查 merged_inputs 的梯度状态 ===[0m
+  [93mego_current_state[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 10)[0m | 类型: torch.float32
+  [93mneighbor_agents_past[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 32, 21, 11)[0m | 类型: torch.float32
+  [93mlanes[0m            | 状态: [91m无梯度[0m    | 形状: [94m(1, 70, 20, 12)[0m | 类型: torch.float32
+  [93mlanes_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 70, 1)[0m | 类型: torch.float32
+  [93mlanes_has_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 70, 1)[0m | 类型: torch.bool
+  [93mroute_lanes[0m      | 状态: [91m无梯度[0m    | 形状: [94m(1, 25, 20, 12)[0m | 类型: torch.float32
+  [93mroute_lanes_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 25, 1)[0m | 类型: torch.float32
+  [93mroute_lanes_has_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 25, 1)[0m | 类型: torch.bool
+  [93mstatic_objects[0m   | 状态: [91m无梯度[0m    | 形状: [94m(1, 5, 10)[0m | 类型: torch.float32
+  [93msampled_trajectories[0m | 状态: [92m需要梯度[0m   | 形状: [94m(1, 11, 81, 4)[0m | 类型: torch.float32
+  [93mdiffusion_time[0m   | 状态: [91m无梯度[0m    | 形状: [94m(1,)[0m   | 类型: torch.float32
+  [93mneighbor_current_mask[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 10)[0m | 类型: torch.bool
+
+[94m=== 统计摘要 ===
+总张量数: 12
+需要梯度的张量: 1 (8%)[0m
+
+[94m=== 检查 score 的梯度状态 ===[0m
+  [93mscore[0m            | 状态: [92m需要梯度[0m   | 形状: [94m(1, 11, 81, 4)[0m | 类型: torch.float32
+
+[94m=== 统计摘要 ===
+总张量数: 1
+需要梯度的张量: 1 (100%)[0m
+Model requires grad: True
+Input requires grad: True
+Loss requires grad: True
+编码器输出 - grad_fn类型: <class 'NoneType'>, 存在性: False, requires_grad: False
+解码器输出 - grad_fn类型: <class 'ViewBackward0'>, 存在性: True, requires_grad: True
+  梯度函数链头部: ViewBackward0
+字典键数量: 12
+所有键名: ['ego_current_state', 'neighbor_agents_past', 'lanes', 'lanes_speed_limit', 'lanes_has_speed_limit', 'route_lanes', 'route_lanes_speed_limit', 'route_lanes_has_speed_limit', 'static_objects', 'sampled_trajectories', 'diffusion_time', 'neighbor_current_mask']
+
+[94m=== 检查 merged_inputs 的梯度状态 ===[0m
+  [93mego_current_state[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 10)[0m | 类型: torch.float32
+  [93mneighbor_agents_past[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 32, 21, 11)[0m | 类型: torch.float32
+  [93mlanes[0m            | 状态: [91m无梯度[0m    | 形状: [94m(1, 70, 20, 12)[0m | 类型: torch.float32
+  [93mlanes_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 70, 1)[0m | 类型: torch.float32
+  [93mlanes_has_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 70, 1)[0m | 类型: torch.bool
+  [93mroute_lanes[0m      | 状态: [91m无梯度[0m    | 形状: [94m(1, 25, 20, 12)[0m | 类型: torch.float32
+  [93mroute_lanes_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 25, 1)[0m | 类型: torch.float32
+  [93mroute_lanes_has_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 25, 1)[0m | 类型: torch.bool
+  [93mstatic_objects[0m   | 状态: [91m无梯度[0m    | 形状: [94m(1, 5, 10)[0m | 类型: torch.float32
+  [93msampled_trajectories[0m | 状态: [92m需要梯度[0m   | 形状: [94m(1, 11, 81, 4)[0m | 类型: torch.float32
+  [93mdiffusion_time[0m   | 状态: [91m无梯度[0m    | 形状: [94m(1,)[0m   | 类型: torch.float32
+  [93mneighbor_current_mask[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 10)[0m | 类型: torch.bool
+
+[94m=== 统计摘要 ===
+总张量数: 12
+需要梯度的张量: 1 (8%)[0m
+
+[94m=== 检查 score 的梯度状态 ===[0m
+  [93mscore[0m            | 状态: [92m需要梯度[0m   | 形状: [94m(1, 11, 81, 4)[0m | 类型: torch.float32
+
+[94m=== 统计摘要 ===
+总张量数: 1
+需要梯度的张量: 1 (100%)[0m
+Model requires grad: True
+Input requires grad: True
+Loss requires grad: True
+epoch train loss: 6.3765
+
+Epoch 2/2
+编码器输出 - grad_fn类型: <class 'NoneType'>, 存在性: False, requires_grad: False
+解码器输出 - grad_fn类型: <class 'ViewBackward0'>, 存在性: True, requires_grad: True
+  梯度函数链头部: ViewBackward0
+字典键数量: 12
+所有键名: ['ego_current_state', 'neighbor_agents_past', 'lanes', 'lanes_speed_limit', 'lanes_has_speed_limit', 'route_lanes', 'route_lanes_speed_limit', 'route_lanes_has_speed_limit', 'static_objects', 'sampled_trajectories', 'diffusion_time', 'neighbor_current_mask']
+
+[94m=== 检查 merged_inputs 的梯度状态 ===[0m
+  [93mego_current_state[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 10)[0m | 类型: torch.float32
+  [93mneighbor_agents_past[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 32, 21, 11)[0m | 类型: torch.float32
+  [93mlanes[0m            | 状态: [91m无梯度[0m    | 形状: [94m(1, 70, 20, 12)[0m | 类型: torch.float32
+  [93mlanes_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 70, 1)[0m | 类型: torch.float32
+  [93mlanes_has_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 70, 1)[0m | 类型: torch.bool
+  [93mroute_lanes[0m      | 状态: [91m无梯度[0m    | 形状: [94m(1, 25, 20, 12)[0m | 类型: torch.float32
+  [93mroute_lanes_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 25, 1)[0m | 类型: torch.float32
+  [93mroute_lanes_has_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 25, 1)[0m | 类型: torch.bool
+  [93mstatic_objects[0m   | 状态: [91m无梯度[0m    | 形状: [94m(1, 5, 10)[0m | 类型: torch.float32
+  [93msampled_trajectories[0m | 状态: [92m需要梯度[0m   | 形状: [94m(1, 11, 81, 4)[0m | 类型: torch.float32
+  [93mdiffusion_time[0m   | 状态: [91m无梯度[0m    | 形状: [94m(1,)[0m   | 类型: torch.float32
+  [93mneighbor_current_mask[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 10)[0m | 类型: torch.bool
+
+[94m=== 统计摘要 ===
+总张量数: 12
+需要梯度的张量: 1 (8%)[0m
+
+[94m=== 检查 score 的梯度状态 ===[0m
+  [93mscore[0m            | 状态: [92m需要梯度[0m   | 形状: [94m(1, 11, 81, 4)[0m | 类型: torch.float32
+
+[94m=== 统计摘要 ===
+总张量数: 1
+需要梯度的张量: 1 (100%)[0m
+Model requires grad: True
+Input requires grad: True
+Loss requires grad: True
+编码器输出 - grad_fn类型: <class 'NoneType'>, 存在性: False, requires_grad: False
+解码器输出 - grad_fn类型: <class 'ViewBackward0'>, 存在性: True, requires_grad: True
+  梯度函数链头部: ViewBackward0
+字典键数量: 12
+所有键名: ['ego_current_state', 'neighbor_agents_past', 'lanes', 'lanes_speed_limit', 'lanes_has_speed_limit', 'route_lanes', 'route_lanes_speed_limit', 'route_lanes_has_speed_limit', 'static_objects', 'sampled_trajectories', 'diffusion_time', 'neighbor_current_mask']
+
+[94m=== 检查 merged_inputs 的梯度状态 ===[0m
+  [93mego_current_state[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 10)[0m | 类型: torch.float32
+  [93mneighbor_agents_past[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 32, 21, 11)[0m | 类型: torch.float32
+  [93mlanes[0m            | 状态: [91m无梯度[0m    | 形状: [94m(1, 70, 20, 12)[0m | 类型: torch.float32
+  [93mlanes_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 70, 1)[0m | 类型: torch.float32
+  [93mlanes_has_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 70, 1)[0m | 类型: torch.bool
+  [93mroute_lanes[0m      | 状态: [91m无梯度[0m    | 形状: [94m(1, 25, 20, 12)[0m | 类型: torch.float32
+  [93mroute_lanes_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 25, 1)[0m | 类型: torch.float32
+  [93mroute_lanes_has_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 25, 1)[0m | 类型: torch.bool
+  [93mstatic_objects[0m   | 状态: [91m无梯度[0m    | 形状: [94m(1, 5, 10)[0m | 类型: torch.float32
+  [93msampled_trajectories[0m | 状态: [92m需要梯度[0m   | 形状: [94m(1, 11, 81, 4)[0m | 类型: torch.float32
+  [93mdiffusion_time[0m   | 状态: [91m无梯度[0m    | 形状: [94m(1,)[0m   | 类型: torch.float32
+  [93mneighbor_current_mask[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 10)[0m | 类型: torch.bool
+
+[94m=== 统计摘要 ===
+总张量数: 12
+需要梯度的张量: 1 (8%)[0m
+
+[94m=== 检查 score 的梯度状态 ===[0m
+  [93mscore[0m            | 状态: [92m需要梯度[0m   | 形状: [94m(1, 11, 81, 4)[0m | 类型: torch.float32
+
+[94m=== 统计摘要 ===
+总张量数: 1
+需要梯度的张量: 1 (100%)[0m
+Model requires grad: True
+Input requires grad: True
+Loss requires grad: True
+编码器输出 - grad_fn类型: <class 'NoneType'>, 存在性: False, requires_grad: False
+解码器输出 - grad_fn类型: <class 'ViewBackward0'>, 存在性: True, requires_grad: True
+  梯度函数链头部: ViewBackward0
+字典键数量: 12
+所有键名: ['ego_current_state', 'neighbor_agents_past', 'lanes', 'lanes_speed_limit', 'lanes_has_speed_limit', 'route_lanes', 'route_lanes_speed_limit', 'route_lanes_has_speed_limit', 'static_objects', 'sampled_trajectories', 'diffusion_time', 'neighbor_current_mask']
+
+[94m=== 检查 merged_inputs 的梯度状态 ===[0m
+  [93mego_current_state[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 10)[0m | 类型: torch.float32
+  [93mneighbor_agents_past[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 32, 21, 11)[0m | 类型: torch.float32
+  [93mlanes[0m            | 状态: [91m无梯度[0m    | 形状: [94m(1, 70, 20, 12)[0m | 类型: torch.float32
+  [93mlanes_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 70, 1)[0m | 类型: torch.float32
+  [93mlanes_has_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 70, 1)[0m | 类型: torch.bool
+  [93mroute_lanes[0m      | 状态: [91m无梯度[0m    | 形状: [94m(1, 25, 20, 12)[0m | 类型: torch.float32
+  [93mroute_lanes_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 25, 1)[0m | 类型: torch.float32
+  [93mroute_lanes_has_speed_limit[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 25, 1)[0m | 类型: torch.bool
+  [93mstatic_objects[0m   | 状态: [91m无梯度[0m    | 形状: [94m(1, 5, 10)[0m | 类型: torch.float32
+  [93msampled_trajectories[0m | 状态: [92m需要梯度[0m   | 形状: [94m(1, 11, 81, 4)[0m | 类型: torch.float32
+  [93mdiffusion_time[0m   | 状态: [91m无梯度[0m    | 形状: [94m(1,)[0m   | 类型: torch.float32
+  [93mneighbor_current_mask[0m | 状态: [91m无梯度[0m    | 形状: [94m(1, 10)[0m | 类型: torch.bool
+
+[94m=== 统计摘要 ===
+总张量数: 12
+需要梯度的张量: 1 (8%)[0m
+
+[94m=== 检查 score 的梯度状态 ===[0m
+  [93mscore[0m            | 状态: [92m需要梯度[0m   | 形状: [94m(1, 11, 81, 4)[0m | 类型: torch.float32
+
+[94m=== 统计摘要 ===
+总张量数: 1
+需要梯度的张量: 1 (100%)[0m
+Model requires grad: True
+Input requires grad: True
+Loss requires grad: True
+epoch train loss: 6.3765
+
+[1;34mwandb[0m: 
+[1;34mwandb[0m: You can sync this run to the cloud by running:
+[1;34mwandb[0m: [1mwandb sync ./lora_finetuning_results/training_log/diffusion-planner-training/2025-08-08-19:59:24/wandb/offline-run-20250808_195925-pdt4jwka[0m

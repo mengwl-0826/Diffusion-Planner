@@ -1,6 +1,6 @@
 from copy import copy, deepcopy
 import torch
-
+import torch.fx
 from diffusion_planner.utils.train_utils import openjson
 
 class StateNormalizer:
