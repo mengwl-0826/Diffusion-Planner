@@ -111,6 +111,7 @@ class DataProcessor(object):
             '''
             Map
             '''
+            # 获取路线关联的路障导航 ID，获取初始时刻（第 0 帧）的交通信号灯状态
             route_roadblock_ids = scenario.get_route_roadblock_ids()
             traffic_light_data = list(scenario.get_traffic_light_status_at_iteration(0))
 
@@ -118,7 +119,7 @@ class DataProcessor(object):
                 route_roadblock_ids = route_roadblock_correction(
                     ego_state, map_api, route_roadblock_ids
                 )
-
+            #获取自车周围的道路中线,左右边线,限速,以及route 信息
             coords, traffic_light_data, speed_limit, lane_route = get_neighbor_vector_set_map(
                 map_api, self._map_features, ego_coords, self._radius, traffic_light_data
             )

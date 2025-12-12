@@ -21,18 +21,19 @@ def _local_to_local_transforms(global_states1, global_states2):
     """
     Converts the global_states1' local coordinates to global_states2's local coordinates.
     """
-
+    # 第一步：生成 global_states2（目标姿态）的SE2变换矩阵（local_xform）
     local_xform = _state_se2_array_to_transform_matrix(global_states2)
+    # 第二步：计算 local_xform 的逆矩阵（local_xform_inv）
     local_xform_inv = np.linalg.inv(local_xform)
-
+    # 第三步：生成 global_states1（源姿态）的SE2变换矩阵（transforms）
     transforms = _state_se2_array_to_transform_matrix_batch(global_states1)
-
+    #以全局坐标系为中间媒介,进行两个坐标系的转换
     transforms = np.matmul(local_xform_inv, transforms)
 
     return transforms
 
 def _state_se2_array_to_transform_matrix(input_data):
-
+    # 将「单个姿态（x,y,heading）」转换为对应的 SE2 变换矩阵
 
     x: float = float(input_data[0])
     y: float = float(input_data[1])
@@ -53,6 +54,7 @@ def _state_se2_array_to_transform_matrix_batch(input_data):
     # [x2, y2, phi2]     [x2, y2, cos2, sin2, 1]
     # ...          ...
     # [xn, yn, phiN]     [xn, yn, cosN, sinN, 1]
+    # 第一步：预处理输入：将 [x,y,heading] 扩展为 [x,y,cos(heading),sin(heading),1]（N×5）
     processed_input = np.column_stack(
         (
             input_data[:, 0],
@@ -64,6 +66,7 @@ def _state_se2_array_to_transform_matrix_batch(input_data):
     )
 
     # See below for reshaping example
+    # 第二步：定义重塑矩阵（核心：将5维输入映射为9维向量，再reshape为3×3矩阵）
     reshaping_array = np.array(
         [
             [0, 0, 1, 0, 0, 0, 0, 0, 0],
@@ -87,6 +90,7 @@ def _transform_matrix_to_state_se2_array_batch(input_data):
     Converts a Nx3x3 batch transformation matrix into a Nx3 array of [x, y, heading] rows.
     :param input_data: The 3x3 transformation matrix.
     :return: The converted array.
+    SE2 变换矩阵的 “反向操作”, N*3*3 ->N*3
     """
 
     # Picks the entries, the third column will be overwritten with the headings [x, y, _]
@@ -155,6 +159,7 @@ def convert_absolute_quantities_to_relative(agent_state, ego_state, agent_type='
         # local vel,acc to local
         agent_local_vel = agent_state[:, [EgoInternalIndex.vx(), EgoInternalIndex.vy()]]
         agent_local_acc = agent_state[:, [EgoInternalIndex.ax(), EgoInternalIndex.ay()]]
+        # 对速度进行维度扩展：[N, 2] → [N, 3] → [N, 3, 1], [vx_global, vy_global, 0], 第三维为0不受平移影响
         agent_local_vel = np.expand_dims(np.concatenate((agent_local_vel, np.zeros((agent_local_vel.shape[0], 1))), axis=-1), axis=-1)
         agent_local_acc = np.expand_dims(np.concatenate((agent_local_acc, np.zeros((agent_local_acc.shape[0], 1))), axis=-1), axis=-1)
         transformed_vel = np.matmul(transforms, agent_local_vel).squeeze(axis=-1)

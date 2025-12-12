@@ -66,6 +66,7 @@ def get_ego_future_array_from_scenario(scenario, current_ego_state, num_future_p
 
 def calculate_additional_ego_states(ego_agent_past, time_stamp):
     # transform haeding to cos h, sin h and calculate the steering_angle and yaw_rate for current state
+    # 于自车的历史状态（位置、速度、航向角等），计算补充关键驾驶状态参数—— 具体包括将航向角转为三角函数表示（cosθ、sinθ）、估算转向角（steering_angle）和横摆率（yaw_rate），最终输出维度扩展后的 “当前自车完整状态”
 
     current_state = ego_agent_past[-1]
     prev_state = ego_agent_past[-2]

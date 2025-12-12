@@ -30,7 +30,10 @@ class BreadthFirstSearchRoadBlock:
         :param forward_search: whether to search in driving direction, defaults to True
         """
         self._map_api: Optional[AbstractMap] = map_api
+         # 初始化搜索队列：用deque（双端队列，BFS标准数据结构），首元素是起始路障对象，None用于标记“当前深度结束”
         self._queue = deque([self.id_to_roadblock(start_roadblock_id), None])
+        # 父节点字典：记录每个“路障ID+深度”对应的前驱路障（用于后续回溯构建路径）
+        # 键格式：路障ID_深度（比如“101_3”表示深度3的101号路障），值：到达该路障的前一个路障
         self._parent: Dict[str, Optional[RoadBlockGraphEdgeMapObject]] = dict()
         self._forward_search = forward_search
 
@@ -51,38 +54,38 @@ class BreadthFirstSearchRoadBlock:
             target_roadblock_id = [target_roadblock_id]
         self._target_roadblock_ids = target_roadblock_id
 
-        start_edge = self._queue[0]
+        start_edge = self._queue[0] # 起始路障对象
 
         # Initial search states
-        path_found: bool = False
-        end_edge: RoadBlockGraphEdgeMapObject = start_edge
-        end_depth: int = 1
-        depth: int = 1
-
+        path_found: bool = False    # 路径是否找到的标记
+        end_edge: RoadBlockGraphEdgeMapObject = start_edge  # 最终找到的路障（默认起始路障）
+        end_depth: int = 1  # 最终找到的路障深度（起始路障深度=1）
+        depth: int = 1  # 当前搜索深度
+        # 记录起始路障的父节点：起始路障没有前驱，父节点为None
         self._parent[start_edge.id + f"_{depth}"] = None
 
         while self._queue:
             current_edge = self._queue.popleft()
 
-            # Early exit condition
+            # Early exit condition 提前退出条件：当前深度超过最大限制，终止搜索
             if self._check_end_condition(depth, max_depth):
                 break
 
-            # Depth tracking
+            # Depth tracking 深度跟踪：遇到None表示当前深度结束，进入下一层
             if current_edge is None:
                 depth += 1
-                self._queue.append(None)
-                if self._queue[0] is None:
+                self._queue.append(None)    # 为下一层添加深度分隔
+                if self._queue[0] is None:  # 若队列下一个还是None，说明所有层都处理完，终止
                     break
                 continue
 
-            # Goal condition
+            # Goal condition 目标检查：当前路障是否是目标路障，且深度未超限制
             if self._check_goal_condition(current_edge, depth, max_depth):
                 end_edge = current_edge
                 end_depth = depth
                 path_found = True
                 break
-
+            # 获取当前路障的邻居（下一跳路障）：根据搜索方向选择出边或入边
             neighbors = (
                 current_edge.outgoing_edges if self._forward_search else current_edge.incoming_edges
             )
@@ -92,7 +95,7 @@ class BreadthFirstSearchRoadBlock:
                 # if next_edge.id in self._candidate_lane_edge_ids_old:
                 self._queue.append(next_edge)
                 self._parent[next_edge.id + f"_{depth + 1}"] = current_edge
-                end_edge = next_edge
+                end_edge = next_edge    # 更新最终路障（即使没找到目标，也记录最后处理的路障）
                 end_depth = depth + 1
 
         return self._construct_path(end_edge, end_depth), path_found
@@ -172,19 +175,30 @@ def get_current_roadblock_candidates(
     :param heading_error_thresh: maximum heading error, defaults to np.pi/4
     :param displacement_error_thresh: maximum displacement, defaults to 3
     :return: tuple of most promising roadblock and other candidates
+    
+    返回值：(最可能的路障, 候选路障列表)（元组）
+        第一元素：优先级最高的路障（距离最近、朝向最匹配，优先选导航路线上的）；
+        第二元素：所有符合筛选条件的候选路障（供后续备用）。
+
+    范围筛选：先找到自车周边 1 米内的路障（主路障 + 连接段），确保候选路障在自车附近；
+    精准筛选：对每个候选路障的车道，计算 “自车到车道的距离” 和 “自车与车道的朝向偏差”，过滤超出阈值的候选；
+    优先级排序：优先选择 “导航路线上” 的候选路障（贴合导航），再 fallback 到 “非路线但最接近” 的路障。
+
     """
     ego_pose: StateSE2 = ego_state.rear_axle
     roadblock_candidates = []
-
+    # 2. 定义要查询的地图层：主路障（ROADBLOCK）和路障连接段（ROADBLOCK_CONNECTOR）
     layers = [SemanticMapLayer.ROADBLOCK, SemanticMapLayer.ROADBLOCK_CONNECTOR]
+    # 3. 查询自车周边1米内的所有路障（主路障+连接段）
     roadblock_dict = map_api.get_proximal_map_objects(
         point=ego_pose.point, radius=1.0, layers=layers
     )
+    # 合并两种路障类型，得到初始候选列表
     roadblock_candidates = (
         roadblock_dict[SemanticMapLayer.ROADBLOCK]
         + roadblock_dict[SemanticMapLayer.ROADBLOCK_CONNECTOR]
     )
-
+    # 4. 边界处理：若1米内没找到路障，扩大范围找最近的路障
     if not roadblock_candidates:
         for layer in layers:
             roadblock_id_, distance = map_api.get_distance_to_nearest_map_object(
@@ -194,24 +208,30 @@ def get_current_roadblock_candidates(
 
             if roadblock:
                 roadblock_candidates.append(roadblock)
-
+    # 存储“导航路线上的候选路障”及其距离误差
     on_route_candidates, on_route_candidate_displacement_errors = [], []
+    # 存储“非导航路线的候选路障”及其距离误差
     candidates, candidate_displacement_errors = [], []
 
     roadblock_displacement_errors = []
     roadblock_heading_errors = []
-
+    # 遍历每个初始候选路障，计算距离和朝向误差
     for idx, roadblock in enumerate(roadblock_candidates):
+        # 初始化当前路障的最小距离误差和朝向误差（默认无穷大）
         lane_displacement_error, lane_heading_error = np.inf, np.inf
-
+        # 遍历当前路障包含的所有车道（一个路障可能有多条车道）
         for lane in roadblock.interior_edges:
+            # 获取车道的基准路径（离散化的点列表，比如每隔1米一个点）
             lane_discrete_path: List[StateSE2] = lane.baseline_path.discrete_path
+            # 提取车道离散点的坐标（转为numpy数组，方便计算）
             lane_discrete_points = np.array(
                 [state.point.array for state in lane_discrete_path], dtype=np.float64
             )
+            # 计算自车到车道每个离散点的距离（欧氏距离）
             lane_state_distances = (
                 (lane_discrete_points - ego_pose.point.array[None, ...]) ** 2.0
             ).sum(axis=-1) ** 0.5
+            # 找到距离自车最近的离散点索引
             argmin = np.argmin(lane_state_distances)
 
             heading_error = np.abs(
@@ -238,16 +258,18 @@ def get_current_roadblock_candidates(
 
         roadblock_displacement_errors.append(lane_displacement_error)
         roadblock_heading_errors.append(lane_heading_error)
-
+    # 优先级1：优先选择“导航路线上”的候选路障（距离最近的最优）
     if on_route_candidates:  # prefer on-route roadblocks
         return (
             on_route_candidates[np.argmin(on_route_candidate_displacement_errors)],
             on_route_candidates,
         )
+    # 优先级2：若无路线上的候选，选择“非路线但距离最近”的候选
     elif candidates:  # fallback to most promising candidate
         return candidates[np.argmin(candidate_displacement_errors)], candidates
 
     # otherwise, just find any close roadblock
+    # 优先级3：若都无符合阈值的候选，直接返回所有候选中距离最近的
     return (
         roadblock_candidates[np.argmin(roadblock_displacement_errors)],
         roadblock_candidates,
@@ -269,8 +291,12 @@ def route_roadblock_correction(
     :param search_depth_backward: depth of forward BFS search, defaults to 15
     :param search_depth_forward:  depth of backward BFS search, defaults to 30
     :return: list of roadblock id's of corrected route
+    返回修正后的路障 ID 列表 route_roadblock_ids确保:
+    自车初始位置所在路障在列表中（路线与自车对齐）；
+    列表中相邻路障在地图上连通（无断裂）；
+    路线无环路（避免重复经过同一组路障
     """
-
+    # 1. 创建字典，存储路障ID与对应的路障对象（主路障或路障连接器）
     route_roadblock_dict = {}
     for id_ in route_roadblock_ids:
         block = map_api.get_map_object(id_, SemanticMapLayer.ROADBLOCK)
@@ -278,18 +304,20 @@ def route_roadblock_correction(
             id_, SemanticMapLayer.ROADBLOCK_CONNECTOR
         )
         route_roadblock_dict[id_] = block
-
+    # 3. 根据自车状态，找到当前所在/邻近的路障（候选列表）
     starting_block, starting_block_candidates = get_current_roadblock_candidates(
         ego_state, map_api, route_roadblock_dict
     )
     starting_block_ids = [roadblock.id for roadblock in starting_block_candidates]
-
+    # 2. 提取路障对象列表和ID列表（方便后续处理）
     route_roadblocks = list(route_roadblock_dict.values())
     route_roadblock_ids = list(route_roadblock_dict.keys())
 
-    # Fix 1: when agent starts off-route
+    # Fix 1: when agent starts off-route 修正 “自车初始位置偏离规划路线” 问题, （比如规划路线是 [B,C,D]，但自车在 A）
     if starting_block.id not in route_roadblock_ids:
         # Backward search if current roadblock not in route
+        # 方案1：反向搜索（从规划路线起点往自车方向找）
+        # 搜索目标：从规划路线第一个路障（route_roadblock_ids[0]）出发，反向找自车所在的路障(这里用的candidates)
         graph_search = BreadthFirstSearchRoadBlock(
             route_roadblock_ids[0], map_api, forward_search=False
         )
@@ -298,10 +326,14 @@ def route_roadblock_correction(
         )
 
         if path_found:
+            # [:0]：在列表最前面插入
+            # path[:-1]：截取搜索路径的 “除最后一个元素外的所有元素
             route_roadblocks[:0] = path[:-1]
             route_roadblock_ids[:0] = path_id[:-1]
 
         else:
+            # 反向没找到，执行方案2：正向搜索（从自车路障往规划路线找）
+            # 搜索目标：从自车路障（starting_block.id）出发，正向找规划路线的前3个路障
             # Forward search to any route roadblock
             graph_search = BreadthFirstSearchRoadBlock(
                 starting_block.id, map_api, forward_search=True
@@ -310,47 +342,56 @@ def route_roadblock_correction(
                 route_roadblock_ids[:3], max_depth=search_depth_forward
             )
 
-            if path_found:
+            if path_found:# 找到连接路径（比如自车A→B，规划路线是[B,C,D]）
+                # 找到连接路径的终点（B）在规划路线中的位置
                 end_roadblock_idx = np.argmax(
                     np.array(route_roadblock_ids) == path_id[-1]
                 )
-
+                # 裁剪规划路线：去掉B之前的无效段（这里B是起点，裁剪后还是[B,C,D]）
                 route_roadblocks = route_roadblocks[end_roadblock_idx + 1 :]
                 route_roadblock_ids = route_roadblock_ids[end_roadblock_idx + 1 :]
-
+                # 把自车到B的路径（A→B）插入到规划路线最前面，变成[A,B,C,D]
                 route_roadblocks[:0] = path
                 route_roadblock_ids[:0] = path_id
 
-    # Fix 2: check if roadblocks are linked, search for links if not
+    # Fix 2: check if roadblocks are linked, search for links if not 修正 “规划路线中路障不连通” 问题
+    # 比如规划路线是 [A,C]，但 A 和 C 之间没有通路，需要补全中间的连接路障 B
     roadblocks_to_append = {}
+    # 遍历规划路线中相邻的路障对（i和i+1）
     for i in range(len(route_roadblocks) - 1):
+        # 获取第i+1个路障的“入边路障ID”（即能直接连接到i+1的路障）
         next_incoming_block_ids = [
             _roadblock.id for _roadblock in route_roadblocks[i + 1].incoming_edges
         ]
+        # 判断第i个路障是否能直接连接到第i+1个路障
         is_incoming = route_roadblock_ids[i] in next_incoming_block_ids
 
         if is_incoming:
             continue
-
+        # 不能直接连接，用BFS搜索i和i+1之间的连通路径
         graph_search = BreadthFirstSearchRoadBlock(
             route_roadblock_ids[i], map_api, forward_search=True
         )
         (path, path_id), path_found = graph_search.search(
             route_roadblock_ids[i + 1], max_depth=search_depth_forward
         )
-
+        # 找到有效路径（且路径长度≥3，避免过短的无效连接）
         if path_found and path and len(path) >= 3:
+            # 裁剪路径：去掉首尾（避免重复i和i+1），只保留中间连接段
             path, path_id = path[1:-1], path_id[1:-1]
+            # 记录插入位置和中间路障
             roadblocks_to_append[i] = (path, path_id)
 
     # append missing intermediate roadblocks
-    offset = 1
+    offset = 1 # 插入后路线长度变化，需要偏移量修正
+    # 在i和i+1之间插入中间路障
     for i, (path, path_id) in roadblocks_to_append.items():
         route_roadblocks[i + offset : i + offset] = path
         route_roadblock_ids[i + offset : i + offset] = path_id
         offset += len(path)
 
-    # Fix 3: cut route-loops
+    # Fix 3: cut route-loops 修正 “规划路线存在环路” 问题
+    # 规划路线中出现重复路障（比如 [A,B,C,B,D]），导致路线循环，需要移除环路，保留唯一路径
     route_roadblocks, route_roadblock_ids = remove_route_loops(
         route_roadblocks, route_roadblock_ids
     )

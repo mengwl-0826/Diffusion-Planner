@@ -106,10 +106,22 @@ def sampled_static_objects_to_array_list(present_tracked_objects):
 # =====================
 def _filter_agents_array(agents, reverse: bool = False):
     """
+    过滤智能体轨迹，仅保留‘目标帧（尾帧）中存在的智能体’，剔除其他所有智能体
     Filter detections to keep only agents which appear in the first frame (or last frame if reverse=True)
     :param agents: The past agents in the scene. A list of [num_frames] arrays, each complying with the AgentInternalIndex schema
     :param reverse: if True, the last element in the list will be used as the filter
     :return: filtered agents in the same format as the input `agents` parameter
+    输入 agents 列表(2 帧）：
+
+    首帧：[[1, t1_a1], [3, t1_a3]](track_id=1、3)
+    尾帧（目标帧）：[[1, t2_a1], [2, t2_a2], [3, t2_a3]](track_id=1、2、3)
+
+    筛选过程：
+
+    目标帧 track_id 集合：{1,2,3}
+    处理首帧：仅保留 track_id=1、3(track_id=2 在首帧不存在，无数据）→结果：[[1, t1_a1], [3, t1_a3]]
+    处理尾帧：所有智能体都在目标帧→保留全部，结果不变；
+    输出：[首帧筛选后数据,..., 尾帧原数据]。
     """
     target_array = agents[-1] if reverse else agents[0]
     for i in range(len(agents)):
@@ -134,6 +146,7 @@ def _filter_agents_array(agents, reverse: bool = False):
 
 def _pad_agent_states(agent_trajectories, reverse: bool):
     """
+    用智能体的最新可用状态填充轨迹中的缺失值，同时严格保留关键帧（首帧 / 尾帧）中智能体的顺序
     Pads the agent states with the most recent available states. The order of the agents is also
     preserved. Note: only agents that appear in the current time step will be computed for. Agents appearing in the
     future or past will be discarded.
@@ -154,6 +167,24 @@ def _pad_agent_states(agent_trajectories, reverse: bool):
     :param agent_trajectories: agent trajectories [num_frames, num_agents, AgentInternalIndex.dim()], corresponding to the AgentInternalIndex schema.
     :param reverse: if True, the padding direction will start from the end of the list instead
     :return: A trajectory of extracted states
+    假设输入轨迹（已过滤，关键帧是 t1):
+
+    t1(关键帧）：[[101, 0.5], [102, 0.3], [103, 0.7]]（状态维度简化为 1,仅展示 ID 和数值）
+    t2:[[101, 0.6], [103, 0.8]]（缺少 102)
+    t3:[[102, 0.4], [103, 0.9]]（缺少 101)
+
+    代码执行过程：
+    映射表:101→0,102→1,103→2
+    缓存初始：[[0,0], [0,0], [0,0]]
+    处理 t1:缓存更新为 [[101,0.5], [102,0.3], [103,0.7]] → t1 帧变为缓存值（不变）；
+    处理 t2:更新 101(0.6)、103(0.8)→ 缓存为 [[101,0.6], [102,0.3], [103,0.8]] → t2 帧变为该缓存(102 用 t1 值填充）；
+    处理 t3:更新 102(0.4)、103(0.9)→ 缓存为 [[101,0.6], [102,0.4], [103,0.9]] → t3 帧变为该缓存(101 用 t2 值填充）；
+    输出：
+
+    t1:[[101,0.5], [102,0.3], [103,0.7]]
+    t2:[[101,0.6], [102,0.3], [103,0.8]]
+    t3:[[101,0.6], [102,0.4], [103,0.9]]
+
     """
 
 
@@ -237,7 +268,7 @@ def agent_past_process(past_ego_states, past_tracked_objects, tracked_objects_ty
         for agent_state in padded_agent_states:
             local_coords_agent_states.append(convert_absolute_quantities_to_relative(agent_state, anchor_ego_state, 'agent'))
     
-        # Calculate yaw rate
+        # Calculate yaw rate 帧数* 智能体数* 维度
         agents_array = np.zeros(
             (len(local_coords_agent_states), local_coords_agent_states[0].shape[0], agents_states_dim)
         )
@@ -251,6 +282,15 @@ def agent_past_process(past_ego_states, past_tracked_objects, tracked_objects_ty
             agents_array[i, :, 5] = local_coords_agent_states[i][:, AgentInternalIndex.vy()].squeeze()
             agents_array[i, :, 6] = local_coords_agent_states[i][:, AgentInternalIndex.width()].squeeze()
             agents_array[i, :, 7] = local_coords_agent_states[i][:, AgentInternalIndex.length()].squeeze()
+        """
+        AgentInternalIndex.XXX() 的作用：
+            是状态字段的 “索引映射”，比如 AgentInternalIndex.x() 返回 “x 坐标” 在原始状态数组中的列索引（比如原始状态第 2 列是 x,就返回 2)，确保从正确位置提取字段。
+        squeeze() 的作用：
+            去除数组的冗余维度（比如原始字段提取后是 (2,1) 形状,squeeze() 后变成 (2,)，避免填充到 agents_array 时出现维度不匹配）。
+        朝向角(heading)的转换逻辑：
+            原始的 heading 是角度值（可能是弧度或度），直接用模型处理时，会因 “0° 和 360° 是同一方向但数值差异大” 产生歧义。而 cos(heading) 和 sin(heading) 能将角度映射到单位圆上的点，既保留了方向信息，又避免了周期性歧义（模型更容易学习）。
+        """
+        
 
     static_objects_array = np.zeros((static_objects.shape[0], 6))
     if static_objects.shape[0] != 0:
@@ -270,24 +310,30 @@ def agent_past_process(past_ego_states, past_tracked_objects, tracked_objects_ty
         Agent type is one-hot encoded: [1, 0, 0] vehicle, [0, 1, 0] pedestrain, [0, 0, 1] bicycle 
             and added to the feature of the agent
         The num_agents is padded or trimmed to fit the predefined number of agents across.
+    按与自车(ego vehicle)的距离排序,筛选固定数量的智能体num_agents, 同时限制行人和自行车的最大数量max_ped_bike,并为每个智能体添加类型的独热编码特征」
     '''
-    # Initialize the result array
+    # Initialize the result array 智能体数量* 时间帧* 智能体状态维度+3（3维是类型独热编码）
     agents = np.zeros((num_agents, agents_array.shape[0], agents_array.shape[-1] + 3), dtype=np.float32)
-
+    # 计算每个智能体到自车的距离：用最后一帧的x、y坐标（局部坐标系）计算欧氏距离
+    # agents_array[-1, :, :2]：最后一帧（-1）所有智能体（:）的x（0列）、y（1列）坐标
+    # np.linalg.norm(..., axis=-1)：对每个智能体的(x,y)计算欧氏距离（sqrt(x²+y²)）
     distance_to_ego = np.linalg.norm(agents_array[-1, :, :2], axis=-1)
 
     # Sort indices by distance
     sorted_indices = np.argsort(distance_to_ego)
 
     # Collect the indices of pedestrians and bicycles
+    # 从排序后的索引中，筛选出“行人和自行车”的索引（按距离排序的顺序）
     ped_bike_indices = [i for i in sorted_indices if agent_types[i] in (TrackedObjectType.PEDESTRIAN, TrackedObjectType.BICYCLE)]
     vehicle_indices = [i for i in sorted_indices if agent_types[i] == TrackedObjectType.VEHICLE]
 
     # If the total number of available agents is less than or equal to num_agents, no need to filter further
+    # 情况1：所有可用智能体（车辆+行人和自行车）总数 ≤ 目标数量num_agents → 无需限制，直接取前num_agents个（近距离优先）,剩余位置留0
     if len(ped_bike_indices) + len(vehicle_indices) <= num_agents:
         selected_indices = sorted_indices[:num_agents]
     else:
         # Limit the number of pedestrians and bicycles to max_ped_bike, while retaining the remaining ones for later use
+        # 情况2：可用智能体总数 > num_agents → 需要限制行人和自行车数量，再补全车辆
         selected_ped_bike_indices = ped_bike_indices[:max_ped_bike]
         remaining_ped_bike_indices = ped_bike_indices[max_ped_bike:]
 
@@ -300,9 +346,13 @@ def agent_past_process(past_ego_states, past_tracked_objects, tracked_objects_ty
             selected_indices += remaining_ped_bike_indices[:remaining_slots]
 
         # Sort and limit the selected indices to num_agents
+        # 步骤4：最终筛选：按距离重新排序（避免车辆和行人间顺序混乱），并截取前num_agents个
         selected_indices = sorted(selected_indices, key=lambda idx: distance_to_ego[idx])[:num_agents]
 
     # Populate the final agents array with the selected agents' features
+    # 按与自车的距离筛选固定数量的目标（智能体 / 静态物体），复制原始特征并添加类型独热编码，输出格式统一的数组”—— 
+    # 第一段处理动态智能体（车辆 / 行人 / 自行车），第二段处理静态物体（禁行区标志 / 护栏 / 交通锥等）
+    # 填充类型独热编码（新增3维，对应3种动态智能体类型）
     for i, j in enumerate(selected_indices):
         agents[i, :, :agents_array.shape[-1]] = agents_array[:, j, :agents_array.shape[-1]]
         if agent_types[j] == TrackedObjectType.VEHICLE:
@@ -312,16 +362,16 @@ def agent_past_process(past_ego_states, past_tracked_objects, tracked_objects_ty
         else:  # TrackedObjectType.BICYCLE
             agents[i, :, agents_array.shape[-1]:] = [0, 0, 1]  # Mark as BICYCLE
 
-
+    # num_static 静态障碍物数量也做了截断
     static_objects = np.zeros((num_static, static_objects_array.shape[-1]+4), dtype=np.float32)
     static_distance_to_ego = np.linalg.norm(static_objects_array[:, :2], axis=-1)
     static_indices = list(np.argsort(static_distance_to_ego))[:num_static]
 
     for i, j in enumerate(static_indices):
         static_objects[i, :static_objects_array.shape[-1]] = static_objects_array[j, :static_objects_array.shape[-1]]
-        if static_objects_types[j] == TrackedObjectType.CZONE_SIGN:
+        if static_objects_types[j] == TrackedObjectType.CZONE_SIGN:#施工区域
             static_objects[i, static_objects_array.shape[-1]:] = [1, 0, 0, 0]
-        elif static_objects_types[j] == TrackedObjectType.BARRIER:
+        elif static_objects_types[j] == TrackedObjectType.BARRIER: #护栏
             static_objects[i, static_objects_array.shape[-1]:] = [0, 1, 0, 0]
         elif static_objects_types[j] == TrackedObjectType.TRAFFIC_CONE:
             static_objects[i, static_objects_array.shape[-1]:] = [0, 0, 1, 0]
